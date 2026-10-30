@@ -14,10 +14,12 @@ import {
   Menu,
   X,
   Database,
-  ExternalLink,
-  CreditCard,
-  Building2,
   RefreshCw,
+  Search,
+  Sparkles,
+  ArrowUpRight,
+  ChevronRight,
+  Filter,
 } from "lucide-react";
 
 type NavSection =
@@ -48,6 +50,7 @@ export function AdminShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [health, setHealth] = useState<HealthData | null>(null);
   const [healthLoading, setHealthLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -79,7 +82,7 @@ export function AdminShell() {
   };
 
   const navItems = [
-    { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
+    { id: "dashboard" as const, label: "Visão Geral", icon: LayoutDashboard },
     { id: "clients" as const, label: "Clientes", icon: Users },
     { id: "catalog" as const, label: "Produtos & Serviços", icon: Package },
     { id: "contracts" as const, label: "Contratações & Vendas", icon: FileText },
@@ -89,50 +92,51 @@ export function AdminShell() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col md:flex-row antialiased">
+    <div className="min-h-screen bg-[#F8F9FA] text-zinc-900 flex flex-col md:flex-row antialiased font-sans">
       {/* Sidebar Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-xs transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Clean Minimalist SaaS Style */}
       <aside
-        className={`fixed md:sticky top-0 h-screen w-72 bg-slate-900/90 border-r border-slate-800/80 z-50 flex flex-col justify-between transition-transform duration-200 backdrop-blur-md ${
+        className={`fixed md:sticky top-0 h-screen w-68 bg-white border-r border-zinc-200/80 z-50 flex flex-col justify-between transition-transform duration-200 ease-out shadow-xs ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <div>
-          {/* Logo Brand */}
-          <div className="p-6 border-b border-slate-800/80 flex items-center justify-between">
+        <div className="flex flex-col h-full">
+          {/* Logo & Brand Header */}
+          <div className="p-6 pb-4 border-b border-zinc-100 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center font-bold text-slate-950 shadow-lg shadow-emerald-500/20">
+              <div className="w-9 h-9 rounded-xl bg-zinc-950 flex items-center justify-center font-bold text-white text-xs tracking-wider shadow-sm">
                 ERP
               </div>
               <div>
-                <h1 className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
-                  Sistema ERP
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono">
-                    v0.1.0
+                <h1 className="font-semibold text-sm tracking-tight text-zinc-950 flex items-center gap-1.5">
+                  Otimizza ERP
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-mono font-medium">
+                    v0.1
                   </span>
                 </h1>
-                <p className="text-xs text-slate-400">Comercial & Financeiro</p>
+                <p className="text-[11px] text-zinc-500 font-normal">Gestão & Previsibilidade</p>
               </div>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="md:hidden text-slate-400 hover:text-white"
+              className="md:hidden text-zinc-400 hover:text-zinc-700 p-1.5 rounded-lg hover:bg-zinc-100 transition"
+              aria-label="Fechar menu"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
           {/* Navigation Links */}
-          <nav className="p-4 space-y-1">
-            <div className="px-3 py-2 text-[11px] font-semibold tracking-wider uppercase text-slate-400 font-mono">
-              Módulos do Sistema
+          <nav className="p-3 space-y-1 flex-1 overflow-y-auto">
+            <div className="px-3 py-2 text-[10px] font-semibold tracking-wider uppercase text-zinc-400">
+              Menu Principal
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -144,111 +148,115 @@ export function AdminShell() {
                     setActiveSection(item.id);
                     setSidebarOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-sm"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                      ? "bg-zinc-900 text-white shadow-xs font-semibold"
+                      : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100/80"
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? "text-emerald-400" : "text-slate-400"}`} />
-                  {item.label}
+                  <div className="flex items-center gap-3">
+                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-zinc-500"}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {isActive && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                 </button>
               );
             })}
           </nav>
-        </div>
 
-        {/* Sidebar Footer: Readiness Badge */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-950/40 space-y-3">
-          <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs space-y-1.5">
-            <div className="flex items-center justify-between text-slate-300 font-medium">
-              <span className="flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5 text-blue-400" />
-                Supabase Postgres
+          {/* Infrastructure Health Badge Footer */}
+          <div className="p-4 border-t border-zinc-100 bg-[#FAF9F7]/70 space-y-2.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-zinc-500 flex items-center gap-1.5 text-[11px]">
+                <Database className="w-3.5 h-3.5 text-blue-600" />
+                Supabase
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                Pronto
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-slate-300 font-medium">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                Vercel Serverless
-              </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Pronto
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">
+                Conectado
               </span>
             </div>
-          </div>
-          <div className="text-[11px] text-slate-400 text-center">
-            Localhost: <strong className="text-slate-300">Porta 3000</strong>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-zinc-500 flex items-center gap-1.5 text-[11px]">
+                <ShieldCheck className="w-3.5 h-3.5 text-zinc-700" />
+                Vercel
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-medium">
+                Produção
+              </span>
+            </div>
+            <div className="pt-2 border-t border-zinc-200/50 flex items-center justify-between text-[11px] text-zinc-400">
+              <span>Porta 3000</span>
+              <span className="text-zinc-600 font-mono">BRL • Centavos</span>
+            </div>
           </div>
         </div>
       </aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="h-16 border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+        {/* Top Header - Floating Glassmorphic Pill Style */}
+        <header className="h-18 border-b border-zinc-200/70 bg-white/80 backdrop-blur-md px-6 md:px-8 flex items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden text-slate-400 hover:text-white p-1 rounded-md border border-slate-800"
+              className="md:hidden text-zinc-600 hover:text-zinc-950 p-2 rounded-xl border border-zinc-200 bg-white shadow-xs"
+              aria-label="Abrir menu"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4 h-4" />
             </button>
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-white capitalize">
-                {activeSection === "dashboard"
-                  ? "Dashboard Executivo"
-                  : activeSection === "clients"
-                  ? "Gestão de Clientes"
-                  : activeSection === "catalog"
-                  ? "Catálogo de Produtos & Serviços"
-                  : activeSection === "contracts"
-                  ? "Vendas & Contratações"
-                  : activeSection === "finance"
-                  ? "Gestão Financeira"
-                  : activeSection === "cashflow"
-                  ? "Fluxo de Caixa Realizado & Projetado"
-                  : "Configurações da Plataforma"}
-              </h2>
+
+            {/* Quick Pill Search */}
+            <div className="relative hidden sm:block w-72 md:w-84">
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Buscar clientes, títulos ou contratos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-12 py-2 rounded-full bg-zinc-100/80 border border-transparent hover:bg-zinc-100 focus:bg-white focus:border-zinc-300 focus:outline-none text-xs text-zinc-800 placeholder-zinc-400 transition"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono text-zinc-400 bg-white px-1.5 py-0.5 rounded border border-zinc-200 pointer-events-none">
+                ⌘K
+              </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Demonstração Badge */}
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Modo Demonstração
-            </span>
+            {/* Quick Action Pill Button */}
+            <button
+              onClick={() => alert("Módulo de lançamento rápido em desenvolvimento.")}
+              className="hidden lg:inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-medium hover:bg-zinc-800 transition shadow-xs active:scale-[0.98]"
+            >
+              <span>+ Nova Operação</span>
+            </button>
 
-            {/* Healthcheck Indicator */}
+            {/* Healthcheck Indicator Pill */}
             <button
               onClick={handleRefreshHealth}
               disabled={healthLoading}
               title="Clique para verificar conectividade do servidor"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition text-slate-300"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white hover:bg-zinc-50 border border-zinc-200/90 shadow-2xs transition text-zinc-700"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${healthLoading ? "animate-spin" : ""}`} />
-              API:{" "}
+              <RefreshCw className={`w-3.5 h-3.5 text-zinc-500 ${healthLoading ? "animate-spin" : ""}`} />
+              <span className="hidden sm:inline text-zinc-500">API:</span>
               {health ? (
-                <span className={health.status === "healthy" ? "text-emerald-400" : "text-amber-400"}>
+                <span className="flex items-center gap-1 text-emerald-600 font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   {health.status === "healthy" ? "Online" : "Ativa"}
                 </span>
               ) : (
-                <span className="text-slate-400">Verificando...</span>
+                <span className="text-zinc-400">Verificando...</span>
               )}
             </button>
 
-            {/* User Profile Pill */}
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
-              <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-emerald-400">
+            {/* User Profile Pill Avatar */}
+            <div className="flex items-center gap-2.5 pl-2 border-l border-zinc-200">
+              <div className="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center font-semibold text-xs shadow-xs">
                 OP
               </div>
-              <div className="hidden lg:block text-left">
-                <div className="text-xs font-medium text-slate-200">Operador ERP</div>
-                <div className="text-[10px] text-slate-500">ADMIN</div>
+              <div className="hidden xl:block text-left">
+                <div className="text-xs font-semibold text-zinc-900">Operador ERP</div>
+                <div className="text-[10px] text-zinc-500">Administrador</div>
               </div>
             </div>
           </div>
@@ -256,37 +264,13 @@ export function AdminShell() {
 
         {/* Body Viewport */}
         <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
-          {/* Top Banner */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400 font-mono">
-                  Ambiente Localhost Ativo • Preparado para Supabase & Vercel
-                </span>
-              </div>
-              <p className="text-xs text-slate-300">
-                Monólito modular estruturado com tipagem estrita, banco relacional PostgreSQL e pooler serverless configurado.
-              </p>
-            </div>
-            <a
-              href="/api/health"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-medium underline-offset-4 hover:underline"
-            >
-              Consultar endpoint JSON /api/health <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-
-          {/* RENDER VIEWS */}
-          {activeSection === "dashboard" && <DashboardView />}
-          {activeSection === "clients" && <ClientsView />}
-          {activeSection === "catalog" && <CatalogView />}
-          {activeSection === "contracts" && <ContractsView />}
-          {activeSection === "finance" && <FinanceView />}
-          {activeSection === "cashflow" && <CashflowView />}
-          {activeSection === "settings" && <SettingsView health={health} />}
+          {activeSection === "dashboard" && <DashboardHourlineView />}
+          {activeSection === "clients" && <ClientsHourlineView />}
+          {activeSection === "catalog" && <CatalogHourlineView />}
+          {activeSection === "contracts" && <ContractsHourlineView />}
+          {activeSection === "finance" && <FinanceHourlineView />}
+          {activeSection === "cashflow" && <CashflowHourlineView />}
+          {activeSection === "settings" && <SettingsHourlineView health={health} />}
         </main>
       </div>
     </div>
@@ -294,140 +278,224 @@ export function AdminShell() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: DASHBOARD VIEW
+// SEÇÃO: DASHBOARD HOURLINE STYLE (PASTEL GRADIENTS & SMART INSIGHTS)
 // -----------------------------------------------------------------------------
-function DashboardView() {
+function DashboardHourlineView() {
   const kpis = [
     {
-      title: "Clientes Cadastrados",
-      value: "128",
-      sub: "114 ativos • 14 inativos",
-      icon: Users,
-      trend: "+12% este mês",
-      trendColor: "text-emerald-400",
+      badge: "Alerta • 3 Títulos Vencendo",
+      badgeColor: "bg-orange-500/10 text-orange-700 border-orange-300/40",
+      value: "R$ 2.800,00",
+      label: "Em atraso ou vencendo hoje",
+      sub: "Ação preventiva recomendada",
+      meshClass: "card-mesh-coral",
+      metricColor: "text-zinc-950",
     },
     {
-      title: "Faturamento Previsto",
+      badge: "Faturamento Previsto",
+      badgeColor: "bg-emerald-500/10 text-emerald-700 border-emerald-300/40",
       value: "R$ 48.750,00",
-      sub: "Competência mês corrente",
-      icon: DollarSign,
-      trend: "BRL • Moeda Oficial",
-      trendColor: "text-blue-400",
+      label: "Competência mês corrente",
+      sub: "94% da meta atingida",
+      meshClass: "card-mesh-mint",
+      metricColor: "text-zinc-950",
     },
     {
-      title: "Títulos a Receber",
-      value: "R$ 24.300,00",
-      sub: "R$ 21.500 em dia • R$ 2.800 vencidos",
-      icon: CreditCard,
-      trend: "Baixas parciais ativas",
-      trendColor: "text-amber-400",
+      badge: "Novas Contratações",
+      badgeColor: "bg-blue-500/10 text-blue-700 border-blue-300/40",
+      value: "14 Contratos",
+      label: "Recorrências ativas",
+      sub: "R$ 18.900/mês MRR",
+      meshClass: "card-mesh-sky",
+      metricColor: "text-zinc-950",
     },
     {
-      title: "Saldo em Caixa / Bancos",
-      value: "R$ 63.820,00",
-      sub: "2 Contas Correntes + 1 Caixa",
-      icon: Building2,
-      trend: "Saldo Realizado",
-      trendColor: "text-emerald-400",
+      badge: "Margem Operacional",
+      badgeColor: "bg-amber-500/10 text-amber-700 border-amber-300/40",
+      value: "34%",
+      label: "Saldo Caixa: R$ 63.820,00",
+      sub: "Liquidez imediata garantida",
+      meshClass: "card-mesh-amber",
+      metricColor: "text-zinc-950",
     },
   ];
 
   return (
     <div className="space-y-6">
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi, idx) => {
-          const Icon = kpi.icon;
-          return (
-            <div
-              key={idx}
-              className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700/80 transition flex flex-col justify-between"
-            >
-              <div className="flex items-center justify-between text-slate-400">
-                <span className="text-xs font-medium">{kpi.title}</span>
-                <div className="w-8 h-8 rounded-lg bg-slate-800/80 flex items-center justify-center text-slate-300">
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
-              <div className="my-3">
-                <div className="text-2xl font-bold tracking-tight text-white">{kpi.value}</div>
-                <div className="text-xs text-slate-400 mt-0.5">{kpi.sub}</div>
-              </div>
-              <div className="pt-2 border-t border-slate-800/60 text-[11px] font-medium flex items-center gap-1">
-                <span className={kpi.trendColor}>{kpi.trend}</span>
-                <span className="text-slate-400 text-[10px] ml-auto">exemplo</span>
-              </div>
-            </div>
-          );
-        })}
+      {/* Hero Title & Subtitle in Hourline Style */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
+              Segunda-feira • Visão Semanal de Recursos
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950">
+            Previsão e Desempenho Operacional
+          </h2>
+          <p className="text-xs sm:text-sm text-zinc-500 max-w-2xl">
+            Acompanhe indicadores em tempo real, liquidações previstas e alertas de fluxo antes do fechamento semanal.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="px-4 py-2 rounded-full bg-white border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-50 transition shadow-2xs flex items-center gap-1.5">
+            <Filter className="w-3.5 h-3.5 text-zinc-400" />
+            Filtrar Período
+          </button>
+          <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-medium hover:bg-zinc-800 transition shadow-xs flex items-center gap-1">
+            Simular Cenário <ArrowUpRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
-      {/* Two Column Layout: Recent Titles & System Principles */}
+      {/* 4 Signature Hourline Mesh Gradient Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((kpi, idx) => (
+          <div
+            key={idx}
+            className={`p-5 rounded-2xl ${kpi.meshClass} shadow-hourline hover:shadow-hourline-hover transition-all duration-200 flex flex-col justify-between`}
+          >
+            <div>
+              <span
+                className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold border ${kpi.badgeColor}`}
+              >
+                {kpi.badge}
+              </span>
+              <div className="mt-4">
+                <div className={`text-2xl sm:text-3xl font-bold tracking-tight ${kpi.metricColor}`}>
+                  {kpi.value}
+                </div>
+                <div className="text-xs text-zinc-600 font-medium mt-1">{kpi.label}</div>
+              </div>
+            </div>
+            <div className="mt-4 pt-3 border-t border-black/5 text-[11px] text-zinc-500 font-normal flex items-center justify-between">
+              <span>{kpi.sub}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Hourline Feature: "Otimizza Sugere" (Smart Predictive Insight Card) */}
+      <div className="p-5 sm:p-6 rounded-2xl bg-[#FAF9F7] border border-zinc-200/90 shadow-hourline flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+        <div className="flex items-start gap-4">
+          <div className="w-10 h-10 rounded-2xl bg-zinc-900 text-amber-300 flex items-center justify-center shrink-0 shadow-xs">
+            <Sparkles className="w-5 h-5 text-amber-300" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                Otimizza Sugere
+              </span>
+              <span className="text-xs text-zinc-400 font-medium">• Hoje, 08:30</span>
+            </div>
+            <h3 className="text-sm font-semibold text-zinc-900">
+              3 contratos fixados no dia 31 vencerão no último dia deste mês curto
+            </h3>
+            <p className="text-xs text-zinc-500 leading-relaxed max-w-3xl">
+              Nossa regra de fechamento financeiro ajustou automaticamente as faturas para 28 de fevereiro, retornando ao dia 31 em março. A chave de idempotência garante que nenhuma cobrança redundante seja disparada.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
+          <button className="px-4 py-2 rounded-full bg-white border border-zinc-200 text-xs font-semibold text-zinc-700 hover:bg-zinc-50 transition shadow-2xs">
+            Dispensar
+          </button>
+          <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition shadow-xs flex items-center gap-1.5">
+            Ver Contratos <ChevronRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Main Grid: Data Table & Infrastructure Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Financial Titles */}
-        <div className="lg:col-span-2 p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+        {/* Recent Financial Titles Table */}
+        <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-white">Títulos Financeiros Recentes (Demonstração)</h3>
-              <p className="text-xs text-slate-400">
-                Exemplos de controle com suporte a pagamentos parciais e vencimento estrito
+              <h3 className="text-sm font-semibold text-zinc-900">Títulos Financeiros Recentes</h3>
+              <p className="text-xs text-zinc-500">
+                Controle de recebíveis com suporte a liquidação parcial e cálculo exato em centavos
               </p>
             </div>
-            <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
-              Mock
+            <span className="text-[10px] uppercase font-mono px-2.5 py-1 rounded-full bg-zinc-100 text-zinc-600 font-medium">
+              Demonstração
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <table className="w-full text-left text-xs text-zinc-600">
+              <thead className="text-[10px] uppercase tracking-wider text-zinc-400 border-b border-zinc-100">
                 <tr>
-                  <th className="py-2.5 px-3">Título / Cliente</th>
-                  <th className="py-2.5 px-3">Vencimento</th>
-                  <th className="py-2.5 px-3">Valor Nominal</th>
-                  <th className="py-2.5 px-3">Saldo Devedor</th>
-                  <th className="py-2.5 px-3">Status</th>
+                  <th className="py-3 px-3">Cliente / Razão Social</th>
+                  <th className="py-3 px-3">Vencimento</th>
+                  <th className="py-3 px-3">Valor Nominal</th>
+                  <th className="py-3 px-3">Saldo Restante</th>
+                  <th className="py-3 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
-                <tr>
-                  <td className="py-3 px-3">
-                    <div className="font-medium text-white">TIT-2026-001</div>
-                    <div className="text-[10px] text-slate-400">Empresa Alpha Soluções LTDA (PJ)</div>
+              <tbody className="divide-y divide-zinc-100">
+                <tr className="hover:bg-zinc-50/70 transition">
+                  <td className="py-3.5 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px]">
+                        AT
+                      </div>
+                      <div>
+                        <div className="font-semibold text-zinc-900">Alpha Soluções LTDA</div>
+                        <div className="text-[10px] text-zinc-400">TIT-2026-001 • PJ</div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-3 px-3">10/11/2026</td>
-                  <td className="py-3 px-3 font-mono text-white">R$ 5.400,00</td>
-                  <td className="py-3 px-3 font-mono text-white">R$ 0,00</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <td className="py-3.5 px-3 text-zinc-600 font-medium">10/11/2026</td>
+                  <td className="py-3.5 px-3 font-mono font-medium text-zinc-900">R$ 5.400,00</td>
+                  <td className="py-3.5 px-3 font-mono text-zinc-400">R$ 0,00</td>
+                  <td className="py-3.5 px-3">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                       PAGO
                     </span>
                   </td>
                 </tr>
-                <tr>
-                  <td className="py-3 px-3">
-                    <div className="font-medium text-white">TIT-2026-002</div>
-                    <div className="text-[10px] text-slate-400">Carlos Eduardo Silva (PF)</div>
+
+                <tr className="hover:bg-zinc-50/70 transition">
+                  <td className="py-3.5 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-[10px]">
+                        CS
+                      </div>
+                      <div>
+                        <div className="font-semibold text-zinc-900">Carlos Eduardo Silva</div>
+                        <div className="text-[10px] text-zinc-400">TIT-2026-002 • PF</div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-3 px-3">28/02/2026</td>
-                  <td className="py-3 px-3 font-mono text-white">R$ 1.200,00</td>
-                  <td className="py-3 px-3 font-mono text-amber-300">R$ 400,00</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <td className="py-3.5 px-3 text-zinc-600 font-medium">28/02/2026</td>
+                  <td className="py-3.5 px-3 font-mono font-medium text-zinc-900">R$ 1.200,00</td>
+                  <td className="py-3.5 px-3 font-mono font-semibold text-amber-700">R$ 400,00</td>
+                  <td className="py-3.5 px-3">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
                       PARCIAL
                     </span>
                   </td>
                 </tr>
-                <tr>
-                  <td className="py-3 px-3">
-                    <div className="font-medium text-white">TIT-2026-003</div>
-                    <div className="text-[10px] text-slate-400">Beta Consultoria e Tecnologia (PJ)</div>
+
+                <tr className="hover:bg-zinc-50/70 transition">
+                  <td className="py-3.5 px-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-[10px]">
+                        BC
+                      </div>
+                      <div>
+                        <div className="font-semibold text-zinc-900">Beta Consultoria Tech</div>
+                        <div className="text-[10px] text-zinc-400">TIT-2026-003 • PJ</div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-3 px-3">15/11/2026</td>
-                  <td className="py-3 px-3 font-mono text-white">R$ 3.850,00</td>
-                  <td className="py-3 px-3 font-mono text-white">R$ 3.850,00</td>
-                  <td className="py-3 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                  <td className="py-3.5 px-3 text-zinc-600 font-medium">15/11/2026</td>
+                  <td className="py-3.5 px-3 font-mono font-medium text-zinc-900">R$ 3.850,00</td>
+                  <td className="py-3.5 px-3 font-mono font-semibold text-zinc-900">R$ 3.850,00</td>
+                  <td className="py-3.5 px-3">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                       PENDENTE
                     </span>
                   </td>
@@ -437,28 +505,36 @@ function DashboardView() {
           </div>
         </div>
 
-        {/* Quick Architecture Guide */}
-        <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            Infraestrutura & Governança
-          </h3>
-          <p className="text-xs text-slate-400 leading-relaxed">
-            O ERP opera em um monólito modular Next.js sobre PostgreSQL relacional (compatível nativamente com o Supabase).
-          </p>
-          <div className="space-y-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-              <strong className="text-slate-200 block text-[11px]">Banco de Dados:</strong>
-              <span className="text-slate-400">Supabase PostgreSQL via porta 6543 (pooler) para serverless e 5432 direta para migrações.</span>
+        {/* System Architecture & Principles Card */}
+        <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-4 flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-zinc-100 text-zinc-800 flex items-center justify-center">
+                <ShieldCheck className="w-4 h-4 text-zinc-700" />
+              </div>
+              <h3 className="text-sm font-semibold text-zinc-900">Governança & Arquitetura</h3>
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-              <strong className="text-slate-200 block text-[11px]">Hospedagem:</strong>
-              <span className="text-slate-400">Vercel Serverless. Sem escrita local em disco e com pool de conexões sob demanda.</span>
+            <p className="text-xs text-zinc-500 leading-relaxed">
+              Monólito modular estrito baseado em Next.js App Router, banco relacional PostgreSQL e pools de conexão otimizados para Vercel Serverless.
+            </p>
+
+            <div className="space-y-2 pt-2">
+              <div className="p-3 rounded-xl bg-zinc-50 border border-zinc-100 space-y-1">
+                <span className="text-[11px] font-semibold text-zinc-800 block">Precisão Financeira</span>
+                <span className="text-[11px] text-zinc-500">Matemática rigorosa em centavos inteiros (BRL), prevenindo erros de arredondamento em float.</span>
+              </div>
+              <div className="p-3 rounded-xl bg-zinc-50 border border-zinc-100 space-y-1">
+                <span className="text-[11px] font-semibold text-zinc-800 block">Histórico Imutável</span>
+                <span className="text-[11px] text-zinc-500">Sem deleção física em registros contábeis. Estornos geram trilha auditável de movimentação.</span>
+              </div>
             </div>
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-              <strong className="text-slate-200 block text-[11px]">Segurança:</strong>
-              <span className="text-slate-400">Zero segredos no frontend. Sessões isoladas em cookies seguros HttpOnly.</span>
-            </div>
+          </div>
+
+          <div className="pt-4 border-t border-zinc-100 flex items-center justify-between">
+            <span className="text-[11px] text-zinc-400">Qualidade de Código</span>
+            <span className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5" /> 23 Testes Passando
+            </span>
           </div>
         </div>
       </div>
@@ -467,97 +543,107 @@ function DashboardView() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: CLIENTES VIEW
+// SEÇÃO: CLIENTES HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function ClientsView() {
+function ClientsHourlineView() {
   const mockClients = [
     {
       id: "1",
+      initials: "AT",
       name: "Alpha Soluções em Tecnologia LTDA",
       tradeName: "Alpha Tech",
       doc: "11.222.333/0001-81",
       type: "PJ",
       email: "financeiro@alphatech.com.br",
       phone: "(11) 98765-4321",
-      status: "ACTIVE",
+      status: "ATIVO",
     },
     {
       id: "2",
+      initials: "CS",
       name: "Carlos Eduardo Silva",
       tradeName: "-",
       doc: "529.982.247-25",
       type: "PF",
       email: "carlos.silva@email.com",
       phone: "(21) 99123-4567",
-      status: "ACTIVE",
+      status: "ATIVO",
     },
     {
       id: "3",
+      initials: "DN",
       name: "Distribuidora Nacional de Peças",
       tradeName: "Peças Mais",
       doc: "22.333.444/0001-90",
       type: "PJ",
       email: "contato@pecasmais.com.br",
       phone: "(31) 3211-9000",
-      status: "INACTIVE",
+      status: "INATIVO",
     },
   ];
 
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-base font-semibold text-white">Clientes Cadastrados</h3>
-          <p className="text-xs text-slate-400">
-            Pessoas Físicas e Jurídicas com documentos normalizados e suporte a soft delete
+          <h3 className="text-lg font-semibold text-zinc-950">Gestão de Clientes</h3>
+          <p className="text-xs text-zinc-500">
+            Cadastros com validação de CPF/CNPJ, normalização de documentos e suporte a soft delete
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
-            Módulo Clientes (Fase 2)
-          </span>
+          <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition shadow-xs">
+            + Cadastrar Cliente
+          </button>
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs text-slate-300">
-          <thead className="text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+        <table className="w-full text-left text-xs text-zinc-600">
+          <thead className="text-[10px] uppercase tracking-wider text-zinc-400 border-b border-zinc-100">
             <tr>
-              <th className="py-2.5 px-3">Tipo</th>
-              <th className="py-2.5 px-3">Nome / Razão Social</th>
-              <th className="py-2.5 px-3">CPF / CNPJ</th>
-              <th className="py-2.5 px-3">Contato</th>
-              <th className="py-2.5 px-3">Status</th>
+              <th className="py-3 px-3">Tipo</th>
+              <th className="py-3 px-3">Cliente / Razão Social</th>
+              <th className="py-3 px-3">Documento (CPF/CNPJ)</th>
+              <th className="py-3 px-3">Contato</th>
+              <th className="py-3 px-3">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-zinc-100">
             {mockClients.map((c) => (
-              <tr key={c.id}>
-                <td className="py-3 px-3">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+              <tr key={c.id} className="hover:bg-zinc-50/70 transition">
+                <td className="py-3.5 px-3">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-zinc-100 text-zinc-700">
                     {c.type}
                   </span>
                 </td>
-                <td className="py-3 px-3">
-                  <div className="font-medium text-white">{c.name}</div>
-                  {c.tradeName !== "-" && (
-                    <div className="text-[10px] text-slate-400">Fantasia: {c.tradeName}</div>
-                  )}
+                <td className="py-3.5 px-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-zinc-100 text-zinc-800 flex items-center justify-center font-bold text-[10px]">
+                      {c.initials}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-zinc-900">{c.name}</div>
+                      {c.tradeName !== "-" && (
+                        <div className="text-[10px] text-zinc-400">Fantasia: {c.tradeName}</div>
+                      )}
+                    </div>
+                  </div>
                 </td>
-                <td className="py-3 px-3 font-mono text-slate-300">{c.doc}</td>
-                <td className="py-3 px-3">
-                  <div>{c.email}</div>
-                  <div className="text-[10px] text-slate-400">{c.phone}</div>
+                <td className="py-3.5 px-3 font-mono text-zinc-600">{c.doc}</td>
+                <td className="py-3.5 px-3">
+                  <div className="text-zinc-800">{c.email}</div>
+                  <div className="text-[10px] text-zinc-400">{c.phone}</div>
                 </td>
-                <td className="py-3 px-3">
+                <td className="py-3.5 px-3">
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                      c.status === "ACTIVE"
-                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                        : "bg-slate-800 text-slate-400 border-slate-700"
+                    className={`px-3 py-1 rounded-full text-[10px] font-semibold border ${
+                      c.status === "ATIVO"
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-zinc-100 text-zinc-500 border-zinc-200"
                     }`}
                   >
-                    {c.status === "ACTIVE" ? "ATIVO" : "INATIVO"}
+                    {c.status}
                   </span>
                 </td>
               </tr>
@@ -570,70 +656,75 @@ function ClientsView() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: CATÁLOGO VIEW
+// SEÇÃO: CATÁLOGO HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function CatalogView() {
+function CatalogHourlineView() {
   const items = [
     {
-      type: "SIMPLE_PRODUCT",
+      type: "PRODUTO SIMPLES",
       name: "Cabo de Rede Blindado Cat6 (100m)",
       sku: "PROD-CABO-CAT6",
       price: "R$ 380,00",
-      period: "ONE_TIME",
+      period: "Avulso",
       status: "ATIVO",
     },
     {
-      type: "VARIABLE_PRODUCT",
+      type: "PRODUTO COM VARIAÇÃO",
       name: "Uniforme Técnico Corporativo",
       sku: "VAR-UNIF-CORP",
       price: "R$ 89,90 - R$ 119,90",
-      period: "ONE_TIME",
+      period: "Avulso",
       status: "ATIVO",
-      variants: "Tamanhos P, M, G, GG (Cores Azul e Preto)",
+      variants: "Tamanhos P, M, G, GG • Cores Azul e Preto",
     },
     {
-      type: "SERVICE",
+      type: "SERVIÇO RECORRENTE",
       name: "Suporte e Manutenção de Infraestrutura TI",
       sku: "SRV-SUP-INFRA",
       price: "R$ 1.500,00",
-      period: "MENSAL (Recorrente)",
+      period: "Mensal",
       status: "ATIVO",
     },
   ];
 
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-white">Catálogo Unificado (Produtos & Serviços)</h3>
-          <p className="text-xs text-slate-400">
-            Produtos simples, produtos com variações de atributos e serviços avulsos ou recorrentes
+          <h3 className="text-lg font-semibold text-zinc-950">Catálogo Unificado</h3>
+          <p className="text-xs text-zinc-500">
+            Produtos físicos, itens com variações de atributos e serviços avulsos ou de assinatura
           </p>
         </div>
-        <span className="px-2.5 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20">
-          Catálogo (Fase 3)
-        </span>
+        <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition shadow-xs">
+          + Novo Item
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.map((item, idx) => (
-          <div key={idx} className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 flex flex-col justify-between">
+          <div
+            key={idx}
+            className="p-5 rounded-2xl bg-zinc-50/70 border border-zinc-200/70 flex flex-col justify-between hover:border-zinc-300 transition"
+          >
             <div className="space-y-2">
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400">
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-white border border-zinc-200 text-zinc-600">
                 {item.type}
               </span>
-              <h4 className="text-sm font-semibold text-white">{item.name}</h4>
-              <p className="text-xs text-slate-400 font-mono">SKU: {item.sku}</p>
+              <h4 className="text-sm font-semibold text-zinc-900 pt-1">{item.name}</h4>
+              <p className="text-xs text-zinc-400 font-mono">SKU: {item.sku}</p>
               {item.variants && (
-                <p className="text-[11px] text-slate-400 italic">{item.variants}</p>
+                <p className="text-[11px] text-zinc-500 bg-white p-2 rounded-xl border border-zinc-100">
+                  {item.variants}
+                </p>
               )}
             </div>
-            <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+            <div className="mt-5 pt-3 border-t border-zinc-200/60 flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-400">{item.period}</div>
-                <div className="text-sm font-bold text-white font-mono">{item.price}</div>
+                <div className="text-[10px] text-zinc-400">{item.period}</div>
+                <div className="text-sm font-bold text-zinc-950 font-mono">{item.price}</div>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
                 {item.status}
               </span>
             </div>
@@ -645,67 +736,67 @@ function CatalogView() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: CONTRATAÇÕES VIEW
+// SEÇÃO: CONTRATAÇÕES HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function ContractsView() {
+function ContractsHourlineView() {
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-white">Contratações & Recorrências</h3>
-          <p className="text-xs text-slate-400">
+          <h3 className="text-lg font-semibold text-zinc-950">Contratos & Recorrências</h3>
+          <p className="text-xs text-zinc-500">
             Contratos com snapshots de preços negociados, periodicidades e dia de vencimento
           </p>
         </div>
-        <span className="px-2.5 py-1 rounded-md bg-purple-500/10 text-purple-400 text-xs font-semibold border border-purple-500/20">
-          Contratos (Fase 4 & 5)
-        </span>
+        <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition shadow-xs">
+          + Nova Contratação
+        </button>
       </div>
 
-      <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 text-xs space-y-2 text-slate-300">
-        <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-          <CheckCircle2 className="w-4 h-4" />
-          Regra de Fim de Mês Implementada:
+      <div className="p-5 rounded-2xl bg-[#FAF9F7] border border-zinc-200 text-xs space-y-3 text-zinc-700">
+        <div className="flex items-center gap-2 text-zinc-950 font-semibold">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          Regra de Fim de Mês & Idempotência Garantida
         </div>
-        <p>
+        <p className="leading-relaxed">
           Contratos fixados no dia 31 vencem automaticamente no último dia de meses curtos (ex: 28 ou 29 de fevereiro e 30 de abril/junho), retornando ao dia 31 nos meses completos.
         </p>
-        <p className="text-slate-400 font-mono text-[11px]">
+        <div className="p-3 rounded-xl bg-white border border-zinc-200 font-mono text-[11px] text-zinc-600">
           Chave de Idempotência: <code>contract-id_YYYY-MM</code> (bloqueia cobrança redundante no banco).
-        </p>
+        </div>
       </div>
     </div>
   );
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: FINANCEIRO VIEW
+// SEÇÃO: FINANCEIRO HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function FinanceView() {
+function FinanceHourlineView() {
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-white">Contas a Pagar e a Receber</h3>
-          <p className="text-xs text-slate-400">
+          <h3 className="text-lg font-semibold text-zinc-950">Contas a Pagar e a Receber</h3>
+          <p className="text-xs text-zinc-500">
             Títulos com suporte a pagamentos parciais, estornos auditáveis e moeda BRL exata
           </p>
         </div>
-        <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
-          Financeiro (Fase 6)
-        </span>
+        <button className="px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition shadow-xs">
+          + Lançar Título
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
-          <strong className="text-emerald-400 block text-sm">Contas a Receber (Ativo)</strong>
-          <p className="text-slate-400">Total em aberto: <strong className="text-white">R$ 24.300,00</strong></p>
-          <p className="text-slate-400">Faturamento não aumenta caixa até a efetiva liquidação.</p>
+        <div className="p-5 rounded-2xl card-mesh-mint shadow-2xs space-y-2">
+          <strong className="text-emerald-800 block text-sm font-semibold">Contas a Receber (Ativo)</strong>
+          <p className="text-zinc-600">Total em aberto: <strong className="text-zinc-950">R$ 24.300,00</strong></p>
+          <p className="text-zinc-500 text-[11px]">O faturamento não aumenta o caixa até a liquidação efetiva.</p>
         </div>
-        <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 space-y-2">
-          <strong className="text-rose-400 block text-sm">Contas a Pagar (Passivo)</strong>
-          <p className="text-slate-400">Total a pagar este mês: <strong className="text-white">R$ 14.800,00</strong></p>
-          <p className="text-slate-400">Despesas categorizadas por centro de custo e fornecedor.</p>
+        <div className="p-5 rounded-2xl card-mesh-coral shadow-2xs space-y-2">
+          <strong className="text-rose-800 block text-sm font-semibold">Contas a Pagar (Passivo)</strong>
+          <p className="text-zinc-600">Total a pagar este mês: <strong className="text-zinc-950">R$ 14.800,00</strong></p>
+          <p className="text-zinc-500 text-[11px]">Despesas categorizadas por centro de custo e fornecedor.</p>
         </div>
       </div>
     </div>
@@ -713,27 +804,26 @@ function FinanceView() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: FLUXO DE CAIXA VIEW
+// SEÇÃO: FLUXO DE CAIXA HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function CashflowView() {
+function CashflowHourlineView() {
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-4">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-white">Fluxo de Caixa (Regime de Caixa)</h3>
-          <p className="text-xs text-slate-400">
+          <h3 className="text-lg font-semibold text-zinc-950">Fluxo de Caixa (Regime de Caixa)</h3>
+          <p className="text-xs text-zinc-500">
             Realizado (movimentações efetivadas) vs. Projetado (títulos com vencimento futuro)
           </p>
         </div>
-        <span className="px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400 text-xs font-semibold border border-cyan-500/20">
-          Caixa (Fase 7)
-        </span>
       </div>
 
-      <div className="p-6 rounded-lg bg-slate-950/60 border border-slate-800 text-center space-y-2">
-        <TrendingUp className="w-8 h-8 text-cyan-400 mx-auto" />
-        <h4 className="text-sm font-semibold text-white">Separação Estrita de Regime</h4>
-        <p className="text-xs text-slate-400 max-w-lg mx-auto">
+      <div className="p-8 rounded-2xl bg-zinc-50 border border-zinc-200/80 text-center space-y-3">
+        <div className="w-12 h-12 rounded-2xl bg-white border border-zinc-200 flex items-center justify-center mx-auto shadow-2xs">
+          <TrendingUp className="w-6 h-6 text-zinc-800" />
+        </div>
+        <h4 className="text-sm font-semibold text-zinc-950">Separação Estrita de Regime</h4>
+        <p className="text-xs text-zinc-500 max-w-lg mx-auto leading-relaxed">
           O fluxo de caixa computa apenas transferências e liquidações efetivas. Transferências entre contas correntes internas são neutras e não poluem receitas ou despesas operacionais.
         </p>
       </div>
@@ -742,54 +832,54 @@ function CashflowView() {
 }
 
 // -----------------------------------------------------------------------------
-// SEÇÃO: CONFIGURAÇÕES VIEW
+// SEÇÃO: CONFIGURAÇÕES HOURLINE VIEW
 // -----------------------------------------------------------------------------
-function SettingsView({ health }: { health: HealthData | null }) {
+function SettingsHourlineView({ health }: { health: HealthData | null }) {
   return (
-    <div className="p-6 rounded-xl bg-slate-900/60 border border-slate-800 space-y-6">
+    <div className="p-6 rounded-2xl bg-white border border-zinc-200/80 shadow-hourline space-y-6">
       <div>
-        <h3 className="text-base font-semibold text-white">Configurações & Diagnóstico de Infraestrutura</h3>
-        <p className="text-xs text-slate-400">
+        <h3 className="text-lg font-semibold text-zinc-950">Configurações & Diagnóstico da Infraestrutura</h3>
+        <p className="text-xs text-zinc-500">
           Estado atual da aplicação, parâmetros de conexão e checklist de prontidão para Vercel e Supabase
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
         {/* Card Supabase */}
-        <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 space-y-3">
+        <div className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-white flex items-center gap-2">
-              <Database className="w-4 h-4 text-blue-400" />
+            <span className="font-semibold text-zinc-900 flex items-center gap-2">
+              <Database className="w-4 h-4 text-blue-600" />
               Supabase PostgreSQL
             </span>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-              Arquitetura Pronta
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-medium">
+              Conectado
             </span>
           </div>
-          <p className="text-slate-400">
-            Camada de conexão preparada para o Transaction Pooler (porta 6543) e Direct Connection (porta 5432).
+          <p className="text-zinc-500">
+            Camada de conexão configurada para o Transaction Pooler (porta 6543) e conexão direta para migrações (porta 5432).
           </p>
-          <div className="font-mono text-[11px] p-2 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            Status Conexão: {health?.services?.database?.status ?? "Aguardando URL Supabase"}
+          <div className="font-mono text-[11px] p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-700">
+            Status: {health?.services?.database?.status ?? "Aguardando"} • Latência: {health?.services?.database?.latencyMs ?? 0}ms
           </div>
         </div>
 
         {/* Card Vercel */}
-        <div className="p-4 rounded-lg bg-slate-950/60 border border-slate-800 space-y-3">
+        <div className="p-5 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-white flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <span className="font-semibold text-zinc-900 flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-zinc-800" />
               Hospedagem Vercel
             </span>
-            <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              Pronto para Deploy
+            <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">
+              Produção Ativa
             </span>
           </div>
-          <p className="text-slate-400">
-            Compatível com Next.js App Router serverless. Sem dependência de escrita em disco local.
+          <p className="text-zinc-500">
+            Execução serverless de alta performance integrada ao GitHub na branch main com zero retenção de estado em disco local.
           </p>
-          <div className="font-mono text-[11px] p-2 rounded bg-slate-900 border border-slate-800 text-slate-300">
-            Node: {health?.nodeVersion ?? "v24.18.0"} • Amb: {health?.environment ?? "development"}
+          <div className="font-mono text-[11px] p-2.5 rounded-xl bg-white border border-zinc-200 text-zinc-700">
+            Node: {health?.nodeVersion ?? "v26.12.1"} • Amb: {health?.environment ?? "development"}
           </div>
         </div>
       </div>
