@@ -8,6 +8,10 @@ const envSchema = z.object({
   DIRECT_URL: z.string().url().optional(),
   DATABASE_URL_TEST: z.string().url().default("postgresql://postgres:postgres@localhost:5432/sistema_erp_test"),
   SESSION_SECRET: z.string().min(16).default("dev_secret_key_needs_replacement_in_production_32chars"),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
+  SUPABASE_PROJECT_REF: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
