@@ -21,8 +21,17 @@ export function createPoolConfig(connectionString: string) {
   const isServerless = process.env.VERCEL === "1";
   const useSsl = shouldEnableSsl(connectionString);
 
+  // Limpar parâmetros sslmode da query string para que o pg não force verify-full
+  // garantindo compatibilidade com certificados auto-assinados de proxies intermediários
+  let cleanedConnectionString = connectionString;
+  if (useSsl) {
+    cleanedConnectionString = connectionString
+      .replace(/[?&]sslmode=[^&]+/g, "")
+      .replace(/\?$/, "");
+  }
+
   return {
-    connectionString,
+    connectionString: cleanedConnectionString,
     // Em ambientes serverless (Vercel) conectados ao Supavisor/Pooler, cada lambda só precisa de 1 a 2 conexões
     max: isServerless ? 2 : (process.env.NODE_ENV === "production" ? 10 : 5),
     idleTimeoutMillis: isServerless ? 10000 : 30000,

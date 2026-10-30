@@ -1,4 +1,10 @@
+import dotenv from "dotenv";
+import path from "node:path";
 import { z } from "zod";
+
+// Carregar variáveis de ambiente de .env.local e .env (essencial para scripts de migração/CLI)
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
